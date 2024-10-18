@@ -1,3 +1,4 @@
+import logging
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -43,6 +44,7 @@ def is_negated(description, taste_keywords):
 
 # Function to get recommendations based on country and taste preferences
 def get_recommendations(data, country_preference, taste_preference):
+
     # Normalize country preference
     country_preference = (
         country_preference.upper() if country_preference else country_preference

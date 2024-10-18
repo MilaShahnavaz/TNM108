@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from recommendation import get_recommendations  # Import the recommendation function
+from recommendation import get_recommendations, data
 import logging
 
 app = Flask(__name__)
@@ -15,22 +15,32 @@ def index():
 @app.route("/api/recommend", methods=["POST"])
 def recommend_wines():
     try:
-        data = request.json
-        logging.info("Received data: %s", data)
+        request_data = request.json
+        logging.info("Received data: %s", request_data)
 
         # Input validation could be added here
-        if "country" not in data or "taste" not in data:
+        if "country" not in request_data or "taste" not in request_data:
             return jsonify({"error": "Missing data for country or taste"}), 400
 
-        country_preference = data.get("country", "").capitalize()
-        taste_preference = data.get("taste", "").lower()
+        country_preference = request_data.get("country", "").capitalize()
+        taste_preference = request_data.get("taste", "").lower()
+
+        logging.info(
+            "Country preference: %s, Taste preference: %s",
+            country_preference,
+            taste_preference,
+        )
 
         # Get the recommendations from the recommendation system
-        recommendations = get_recommendations(country_preference, taste_preference)
+        recommendations = get_recommendations(
+            country_preference, taste_preference
+        )
+        logging.info("Recommendations generated successfully")
+
         return jsonify(recommendations)
 
     except Exception as e:
-        logging.error("An error occurred: %s", str(e))
+        logging.error("An error occurred: %s", str(e), exc_info=True)
         return (
             jsonify({"error": "An error occurred while processing your request"}),
             500,

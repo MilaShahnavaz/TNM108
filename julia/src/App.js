@@ -20,6 +20,7 @@ function App() {
   // Event handler for form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log("Submitting with:", { country, taste }); // Log input data
 
     try {
       // Update the fetch URL to match the Flask route
